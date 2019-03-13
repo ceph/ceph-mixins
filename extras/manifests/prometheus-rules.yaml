@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: alert
+    role: alert-rules
+  name: prometheus-alert-rules
+  namespace: openshift-storage
+spec:
+  groups:
+  - name: state-alert.rules
+    rules:
+    - alert: OCS_CephClusterErrorState
+      annotations:
+        message: Ceph cluster is in error state
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} > 1
+      for: 10m
+      labels:
+        severity: critical
+    - alert: OCS_CephClusterWarningState
+      annotations:
+        message: Ceph cluster is in warning state
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} == 1
+      for: 10m
+      labels:
+        severity: warning
