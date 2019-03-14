@@ -29,4 +29,4 @@ clean:
 	rm -rf dashboards_out prometheus_alerts.yaml prometheus_rules.yaml
 
 test: prometheus_alerts.yaml prometheus_rules.yaml
-promtool test rules tests.yaml
+	promtool test rules tests.yaml
