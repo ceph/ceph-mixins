@@ -69,3 +69,111 @@ spec:
       for: 15m
       labels:
         severity: warning
+  - name: osd-alert.rules
+    rules:
+    - alert: CephOSDsDown
+      annotations:
+        description: Additional load recovery places on ceph cluster. Client IO could
+          be affected.
+        message: Additional load recovery places on ceph cluster. Client IO could
+          be affected.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        (count(ceph_osd_up * on(ceph_daemon) ceph_osd_in == 0) > 0) and ((ceph_pg_total - on(job) ceph_pg_clean) > 0)
+      for: 5m
+      labels:
+        severity: warning
+    - alert: CephOSDDiskNotResponding
+      annotations:
+        description: Disk not responding, on host {{ $labels.host }} (device {{ $labels.device
+          }})
+        message: Disk not responding
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 1m
+      labels:
+        severity: warning
+    - alert: CephOSDDiskUnavailable
+      annotations:
+        description: Disk inaccessible on host {{ $labels.host }} (device {{ $labels.device
+          }})
+        message: Disk is inaccessible
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace((ceph_osd_in == 0 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 1m
+      labels:
+        severity: warning
+    - alert: CephDataRecoveryActive
+      annotations:
+        description: Data recovery is active, resynchronizing data to the required
+          data protection level
+        message: Data recovery is active
+        severity_level: info
+        storage_type: ceph
+      expr: |
+        rate(ceph_pg_undersized[30s]) > 0 and ceph_pg_undersized > 0
+      for: 30s
+      labels:
+        severity: info
+    - alert: CephDataRecoveryQueued
+      annotations:
+        description: Data recovery is queued
+        message: Data recovery is queued
+        severity_level: info
+        storage_type: ceph
+      expr: |
+        rate(ceph_pg_undersized[30s]) == 0 and ceph_pg_undersized > 0
+      for: 30s
+      labels:
+        severity: info
+    - alert: CephDataRecoveryTakingTooLong
+      annotations:
+        description: Data recovery has been active for over 2h. Contact Support
+        message: Data recovery is slow
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_pg_undersized > 0
+      for: 2h
+      labels:
+        severity: warning
+    - alert: CephDataRebalanceQueued
+      annotations:
+        description: Data rebalance is queued (rebalance improves disk utilization
+          and performance)
+        message: Data rebalance queued
+        severity_level: info
+        storage_type: ceph
+      expr: |
+        rate(ceph_pg_remapped[30s]) == 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
+      for: 15s
+      labels:
+        severity: info
+    - alert: CephDataRebalanceActive
+      annotations:
+        description: Data rebalance is active (rebalance improves disk utilization
+          and performance)
+        message: Data rebalance active
+        severity_level: info
+        storage_type: ceph
+      expr: |
+        rate(ceph_pg_remapped[30s]) > 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
+      for: 15s
+      labels:
+        severity: info
+    - alert: CephPGRepairTakingTooLong
+      annotations:
+        description: Self Heal operations taking too long. Contact Support
+        message: Problems detected within self heal
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_pg_inconsistent > 0
+      for: 1h
+      labels:
+        severity: warning

@@ -4,9 +4,15 @@
     cephExporterSelector: 'job="rook-ceph-mgr"',
 
     // Duration to raise various Alerts
-    clusterUtilizationAlertTime: '5m',
     clusterStateAlertTime: '10m',
+    clusterUtilizationAlertTime: '5m',
     monQuorumAlertTime: '15m',
+    osdDataRebalanceAlertTime: '15s',
+    osdDataRecoveryAlertTime: '2h',
+    osdDataRecoveryInProgressAlertTime: '30s',
+    osdDiskAlertTime: '1m',
+    osdDownAlertTime: '5m',
+    PGRepairAlertTime: '1h',
 
     // Constants
     storageType: 'ceph',
