@@ -1,7 +1,7 @@
 {
   _config+:: {
     // Selectors are inserted between {} in Prometheus queries.
-    cephExporterSelector: 'job="ceph"',
+    cephExporterSelector: 'job="rook-ceph-mgr"',
 
     // Duration to raise various Alerts
     clusterUtilizationAlertTime: '5m',
