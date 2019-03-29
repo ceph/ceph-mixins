@@ -2,10 +2,10 @@
   prometheusAlerts+:: {
     groups+: [
       {
-        name: 'state-alert.rules',
+        name: 'cluster-state-alert.rules',
         rules: [
           {
-            alert: 'OCS_CephClusterErrorState',
+            alert: 'CephClusterErrorState',
             expr: |||
               ceph_health_status{%(cephExporterSelector)s} > 1
             ||| % $._config,
@@ -14,11 +14,14 @@
               severity: 'critical',
             },
             annotations: {
-              message: 'Ceph cluster is in error state',
+              message: 'Storage cluster is in error state',
+              description: 'Storage cluster is in error state for more than %s.' % $._config.clusterStateAlertTime,
+              storage_type: $._config.storageType,
+              severity_level: 'error',
             },
           },
           {
-            alert: 'OCS_CephClusterWarningState',
+            alert: 'CephClusterWarningState',
             expr: |||
               ceph_health_status{%(cephExporterSelector)s} == 1
             ||| % $._config,
@@ -27,7 +30,10 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'Ceph cluster is in warning state',
+              message: 'Storage cluster is in warning state',
+              description: 'Storage cluster is in warning state for more than %s.' % $._config.clusterStateAlertTime,
+              storage_type: $._config.storageType,
+              severity_level: 'warning',
             },
           },
         ],
