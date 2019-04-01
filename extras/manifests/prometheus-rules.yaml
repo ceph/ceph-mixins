@@ -32,6 +32,7 @@ spec:
       for: 10m
       labels:
         severity: warning
+<<<<<<< HEAD
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull
@@ -69,3 +70,16 @@ spec:
       for: 15m
       labels:
         severity: warning
+=======
+  - name: pg-alert.rules
+    rules:
+    - alert: OCS_CephPgStuck
+      annotations:
+        message: OCS Ceph PG's in stuck state. Recommended for Admin to review the
+          cluster.
+      expr: |
+        max(ceph_osd_numpg{job="rook-ceph-mgr"}) - scalar(ceph_pg_active{job="rook-ceph-mgr"}) <= 0
+      for: 1m
+      labels:
+        severity: error
+>>>>>>> Added alert for ceph pg stuck

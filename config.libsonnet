@@ -7,6 +7,7 @@
     clusterUtilizationAlertTime: '5m',
     clusterStateAlertTime: '10m',
     monQuorumAlertTime: '15m',
+    pgStuckAlertTime: '1m',
 
     // Constants
     storageType: 'ceph',
