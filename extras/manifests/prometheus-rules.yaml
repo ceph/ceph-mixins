@@ -8,6 +8,33 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
+  - name: quorum-alert.rules
+    rules:
+    - alert: MonQuorumAtRisk
+      annotations:
+        description: Quorum is low for storage cluster. Please Contact Support
+        message: Storage quorum at risk
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
+      for: 15m
+      labels:
+        severity: warning
+  - name: pg-alert.rules
+    rules:
+    - alert: CephPgStuck
+      annotations:
+        description: Data reliability issues with storage cluster for more than 1m.
+          Recommended for admin to review the storage cluster.
+        message: Data reliability issues with storage cluster
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        max(ceph_osd_numpg{job="rook-ceph-mgr"}) - scalar(ceph_pg_active{job="rook-ceph-mgr"}) <= 0
+      for: 1m
+      labels:
+        severity: warning
   - name: cluster-state-alert.rules
     rules:
     - alert: CephClusterErrorState
@@ -32,7 +59,6 @@ spec:
       for: 10m
       labels:
         severity: warning
-<<<<<<< HEAD
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull
@@ -57,29 +83,3 @@ spec:
       for: 5m
       labels:
         severity: critical
-  - name: quorum-alert.rules
-    rules:
-    - alert: MonQuorumAtRisk
-      annotations:
-        description: Quorum is low for storage cluster. Please Contact Support
-        message: Storage quorum at risk
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
-      for: 15m
-      labels:
-        severity: warning
-=======
-  - name: pg-alert.rules
-    rules:
-    - alert: OCS_CephPgStuck
-      annotations:
-        message: OCS Ceph PG's in stuck state. Recommended for Admin to review the
-          cluster.
-      expr: |
-        max(ceph_osd_numpg{job="rook-ceph-mgr"}) - scalar(ceph_pg_active{job="rook-ceph-mgr"}) <= 0
-      for: 1m
-      labels:
-        severity: error
->>>>>>> Added alert for ceph pg stuck
