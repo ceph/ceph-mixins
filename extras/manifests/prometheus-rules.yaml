@@ -56,3 +56,16 @@ spec:
       for: 5m
       labels:
         severity: critical
+  - name: quorum-alert.rules
+    rules:
+    - alert: MonQuorumAtRisk
+      annotations:
+        description: Quorum is low for storage cluster. Please Contact Support
+        message: Storage quorum at risk
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
+      for: 15m
+      labels:
+        severity: warning

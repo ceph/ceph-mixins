@@ -6,6 +6,7 @@
     // Duration to raise various Alerts
     clusterUtilizationAlertTime: '5m',
     clusterStateAlertTime: '10m',
+    monQuorumAlertTime: '15m',
 
     // Constants
     storageType: 'ceph',
