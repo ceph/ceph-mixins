@@ -8,19 +8,25 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
-  - name: state-alert.rules
+  - name: cluster-state-alert.rules
     rules:
-    - alert: OCS_CephClusterErrorState
+    - alert: CephClusterErrorState
       annotations:
-        message: Ceph cluster is in error state
+        description: Storage cluster is in error state for more than 10m.
+        message: Storage cluster is in error state
+        severity_level: error
+        storage_type: ceph
       expr: |
         ceph_health_status{job="rook-ceph-mgr"} > 1
       for: 10m
       labels:
         severity: critical
-    - alert: OCS_CephClusterWarningState
+    - alert: CephClusterWarningState
       annotations:
-        message: Ceph cluster is in warning state
+        description: Storage cluster is in warning state for more than 10m.
+        message: Storage cluster is in warning state
+        severity_level: warning
+        storage_type: ceph
       expr: |
         ceph_health_status{job="rook-ceph-mgr"} == 1
       for: 10m

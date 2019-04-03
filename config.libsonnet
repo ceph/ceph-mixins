@@ -7,6 +7,9 @@
     clusterUtilizationAlertTime: '5m',
     clusterStateAlertTime: '10m',
 
+    // Constants
+    storageType: 'ceph',
+
     // For links between grafana dashboards, you need to tell us if your grafana
     // servers under some non-root path.
     grafanaPrefix: '',
