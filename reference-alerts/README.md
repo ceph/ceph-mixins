@@ -7,7 +7,8 @@ The alerts include the following;
 |------|-------------|  
 | Health OK | ceph health is OK (0) |   
 | Health Warning | ceph health is in warning state (1) |    
-| Health Error | ceph health is in an error state (2) |   
+| Health Error | ceph health is in an error state (2) |  
+| OSD Host Down | Check for up state across hosts carrying OSDs |   
 | Capacity check for node outage | Looks for most full host, and checks against freespace in the cluster  | 
 | Capacity running low | Capacity > 85% full |  
 | Ceph versions inconsistent (MDS) | MDS daemon version checked |  

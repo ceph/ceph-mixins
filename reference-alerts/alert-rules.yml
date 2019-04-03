@@ -147,6 +147,15 @@ groups:
     annotations:
       summary: "Storage quorum at risk"
       description: "Ceph monitor quorum is low. Please Contact Support"
+  - alert: OSD Host down
+    expr: |
+      count((label_replace(up,"exported_instance","$1","instance","(.*):.*") ==  0)  * on(exported_instance)  group_right(ceph_daemon) ceph_disk_occupation) by (exported_instance)
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host is down"
+      description: "Host {{ $labels.exported_instance }} is down, affecting {{ $value }} disks"
 - name: Version_Checks
   rules:
   - alert: Ceph versions inconsistent (OSD)
