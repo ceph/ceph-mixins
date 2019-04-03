@@ -1,3 +1,4 @@
+(import 'monquorum.libsonnet')+
+(import 'network.libsonnet')+
 (import 'state.libsonnet') +
-(import 'utilization.libsonnet') +
-(import 'monquorum.libsonnet')
+(import 'utilization.libsonnet')

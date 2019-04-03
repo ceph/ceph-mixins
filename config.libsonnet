@@ -7,6 +7,8 @@
     clusterUtilizationAlertTime: '5m',
     clusterStateAlertTime: '10m',
     monQuorumAlertTime: '15m',
+    networkErrorAlertTime: '1m',
+    networkInterfaceErrorAlertTime: '30s',
 
     // Constants
     storageType: 'ceph',

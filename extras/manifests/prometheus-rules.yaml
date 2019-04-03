@@ -8,6 +8,58 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
+  - name: quorum-alert.rules
+    rules:
+    - alert: MonQuorumAtRisk
+      annotations:
+        description: Quorum is low for storage cluster. Please Contact Support
+        message: Storage quorum at risk
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
+      for: 15m
+      labels:
+        severity: warning
+  - name: network-alert.rules
+    rules:
+    - alert: NetworkError
+      annotations:
+        description: Interface {{ $labels.device }} on host {{ $labels.host }} has
+          errors. Please check cabling and network switch logs
+        message: Network card showing send/receive errors on host {{ $labels.host
+          }}
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace(node_network_transmit_errs_total, "host", "$1", "instance", "(.*):.*") > 0 or label_replace(node_network_receive_errs_total, "host", "$1", "instance", "(.*):.*") > 0
+      for: 1m
+      labels:
+        severity: warning
+    - alert: NetworkInterfaceDown
+      annotations:
+        description: Interface {{ $labels.interface }} on host {{ $labels.host }}
+          is down. Please check cabling, and network switch logs
+        message: Network interface is down on {{ $labels.host }}
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace(node_network_up{interface=~"(eth|en|bond|ib|mlx).*"}, "host", "$1", "instance", "(.*):.*") == 0
+      for: 30s
+      labels:
+        severity: warning
+    - alert: NetworkInterfaceFlapping
+      annotations:
+        description: Interface {{ $labels.interface }} on {{ $labels.host }} is changing
+          state (up/down) too often
+        message: Network interface flapping on host {{ $labels.host }}
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace(changes(node_network_up[30s]), "host", "$1","instance","(.*):.*") > 2
+      for: 30s
+      labels:
+        severity: warning
   - name: cluster-state-alert.rules
     rules:
     - alert: CephClusterErrorState
@@ -56,16 +108,3 @@ spec:
       for: 5m
       labels:
         severity: critical
-  - name: quorum-alert.rules
-    rules:
-    - alert: MonQuorumAtRisk
-      annotations:
-        description: Quorum is low for storage cluster. Please Contact Support
-        message: Storage quorum at risk
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
-      for: 15m
-      labels:
-        severity: warning
