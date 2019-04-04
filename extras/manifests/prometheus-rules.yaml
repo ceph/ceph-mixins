@@ -8,6 +8,20 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
+  - name: clock-alert.rules
+    rules:
+    - alert: ClockSkew
+      annotations:
+        description: Clock skew detected on {{ $labels.host }}. Please confirm NTP
+          is configured correctly on this host
+        message: Clock skew/drift detected
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        label_replace((node_ntp_offset_seconds < -0.03 or node_ntp_offset_seconds > 0.03),"host","$1","instance","(.*):.*")
+      for: 30s
+      labels:
+        severity: warning
   - name: cluster-state-alert.rules
     rules:
     - alert: CephClusterErrorState
