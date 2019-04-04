@@ -31,5 +31,6 @@ The alerts include the following;
 | PGs too high | PGs per OSD is too high. this can impact memory, peering and increase cpu load on the mon/mgr |
 | Self heal disabled | noout and nodown flags have been set for too long |   
 
-You can use these alerts in standalone ceph, or convert to a PrometheusRule CR for k8s.  
+You can use the alerts defined in ```alert-rules.yml``` in a standalone ceph/prometheus environment or use the ```prometheus-ceph-rules.yml``` file when testing against rook/ceph+prometheus.
+
 

@@ -1,0 +1,275 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  creationTimestamp: null
+  labels:
+    prometheus: rook-prometheus
+    role: alert-rules
+  name: prometheus-ceph-rules
+  namespace: rook-ceph
+spec:
+  groups:
+  - name: OSD_Checks
+    rules:
+    - alert: Disk Connectivity (down)
+      expr: |
+        label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + 
+        on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Disk {{ $labels.disk }} not responding"
+        description: "Disk {{ $labels.disk }} not responding, on host {{ $labels.host }} (device {{ $labels.device }})"
+    - alert: Disk Unavailable (down + out)
+      expr: |
+        label_replace((ceph_osd_in == 0 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + 
+        on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Disk {{ $labels.disk }} inaccessible"
+        description: "Disk {{ $labels.disk }} inaccessible on host {{ $labels.host }} (device {{ $labels.device }})"
+    - alert: Data recovery active
+      expr: |
+        rate(ceph_pg_undersized[30s]) > 0 and ceph_pg_undersized > 0
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Data recovery is active"
+        description: "Data recovery is active, resynchronizing data to the required data protection level"
+    - alert: Data recovery queued
+      expr: |
+        rate(ceph_pg_undersized[30s]) == 0 and ceph_pg_undersized > 0
+      for: 30s
+      labels:
+        severity: info
+      annotations:
+        summary: "Data recovery is queued"
+        description: "Data recovery is queued"
+    - alert: Data recovery taking too long
+      #
+      # we need some timings from actual tests on the hardware to set the 'for' parameter correctly
+      expr: |
+        ceph_pg_undersized > 0
+      for: 2h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Data recovery is slow"
+        description: "Data recovery has been active for over 2 hours. Contact Support"
+    - alert: Data rebalance queued
+      expr: |
+        rate(ceph_pg_remapped[30s]) == 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
+      for: 15s
+      labels:
+        severity: info
+      annotations:
+        summary: "Data rebalance queued"
+        description: "Data rebalance is queued (rebalance improves disk utilization and performance)"
+    - alert: Data rebalance active
+      expr: |
+        rate(ceph_pg_remapped[30s]) > 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
+      for: 15s
+      labels:
+        severity: info
+      annotations:
+        summary: "Data rebalance active"
+        description: "Data rebalance is active (rebalance improves disk utilization and performance)"
+    - alert: PGs repair taking too long
+      expr: |
+        ceph_pg_inconsistent > 0
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Problems detected within self heal"
+        description: "Self Heal operations taking too long. Contact Support"
+    #
+    # May not need this one if ceph is using the pg_autoscaler module
+    #- alert: PGs too low
+    #  expr: |
+    #    label_replace(ceph_osd_numpg,"disk","$1","ceph_daemon","osd.(.*)") < 30
+    #  for: 5m
+    #  labels:
+    #    severity: warning
+    #  annotations:
+    #    summary: "Internal data distribution is not optimized(too LOW) on disk {{ $labels.disk }}"
+    #    description: "Ceph PG count < 30 on disk {{ $labels.disk }}. Please contact Support"
+    - alert: PGs too high
+      expr: |
+        label_replace(ceph_osd_numpg,"disk","$1","ceph_daemon","osd.(.*)") >= 300 
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Internal data distribution is not optimized(too HIGH) on disk {{ $labels.disk}}"
+        description: "Ceph PG count >= 300 on {{ $labels.disk }}. Please contact Support"
+  - name: Ceph_Cluster_Health
+    # Goal is for this to fire only when health transitions back to OK - not all the time!
+    # Not 100% sure the query is correct
+    rules:
+    - alert: Health OK
+      expr: |
+        ceph_health_status == 0 and ON() changes(ceph_health_status[30s]) > 0
+      for: 10s
+      labels:
+        severity: info
+      annotations:
+        summary: "Storage Health is OK"
+        description: "Ceph storage cluster is in an optimal state"
+    - alert: Health Warning
+      expr: |
+        ceph_health_status == 1
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Ceph is in a Warning state"
+        description: "Problems detected in the storage cluster, recovery actions may be active"
+    - alert: Health Error
+      expr: |
+        ceph_health_status == 2
+      for: 30s
+      labels:
+        severity: error
+      annotations:
+        summary: "Ceph is in an Error State"
+        description: "Problems detected in the cluster, manual intervention may be required to resolve"
+    - alert: Self heal disabled
+      expr: |
+        ceph_osd_flag_nodown + ceph_osd_flag_noout > 1
+      for: 24h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Automatic self healing disabled"
+        description: "Self healing has been disabled for more than 24 hours. Please contact Support"
+    - alert: Mon quorum at risk
+      expr: |
+        count(ceph_mon_quorum_status == 1) <= (count(ceph_mon_metadata) % 2 + 1)
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Storage quorum at risk"
+        description: "Ceph monitor quorum is low. Please Contact Support"
+    - alert: OSD Host down
+      expr: |
+        count((label_replace(up,"exported_instance","$1","instance","(.*):.*") ==  0)  * on(exported_instance)  group_right(ceph_daemon) ceph_disk_occupation) by (exported_instance)
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Host is down"
+        description: "Host {{ $labels.exported_instance }} is down, affecting {{ $value }} disks"
+  - name: Version_Checks
+    rules:
+    - alert: Ceph versions inconsistent (OSD)
+      expr: |
+        count(count(ceph_osd_metadata) by(ceph_version)) > 1
+      for: 24h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Inconsistent s/w versions (OSDs) - {{ $value }} detected"
+        description: "Nominal configurations should have a consistent s/w versions across the storage cluster. Contact Support"
+    - alert: Ceph versions inconsistent (MON)
+      expr: |
+        count(count(ceph_mon_metadata) by(ceph_version)) > 1
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Inconsistent s/w versions (MONs) - {{ $value }} detected"
+        description: "Nominal configurations should have a consistent s/w versions across the storage cluster. Contact Support"
+    - alert: Ceph versions inconsistent (MDS)
+      expr: |
+        count(count(ceph_mds_metadata) by(ceph_version)) > 1
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Inconsistent s/w versions (MDSs) - {{ $value }} detected"
+        description: "Nominal configurations should have a consistent s/w versions across the storage cluster. Contact Support"
+  - name: Capacity_checks
+    rules:
+    - alert: Capacity running low
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) * 100 > 85
+      for: 4h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Storage capacity above 85% utilized"
+        description: "Storage capacity above 85%, consider adding more disks/hosts to the cluster"
+    - alert: Free capacity approaching critical
+      expr: | 
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) * 100 >= 95
+      for: 4h
+      labels:
+        severity: error
+      annotations:
+        summary: "Storage capacity above 95% utilized"
+        description: "Storage capacity above 95%. without additional storage, performance will degrade and applications may fail"
+    - alert: Capacity check for node outage
+      expr: |
+        max(sum(ceph_osd_stat_bytes - ceph_osd_stat_bytes_used)) * 0.8 -
+        max(sum by (exported_instance) (ceph_osd_stat_bytes_used + on (ceph_daemon) group_left (exported_instance) (ceph_disk_occupation*0))) < 0
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Inadequate free storage capacity to support host maintenance, or a host outage"
+        description: "Free capacity is too low for data to be reliably resync'd within the cluster. This may lead to data availability issues"
+  - name: Time_checks
+  # PLACEHOLDER: Needs Review
+  # What does RHCOS do for time sync on the bare metal, which collectors are enabled on node_exporter in OCP?
+  # This should use the ntp collector to determine state, using time_seconds is useless
+  # Ceph will enter a warning state with a skew > 0.05s
+  # Option 1. abs(node_time_seconds - timestamp(node_time_seconds)) .. just uses default collectors - indicative, not definitive
+  # Option 2. node_ntp_offset_seconds (from node_exporter ntp plugin)
+  #           this needs chrony.conf to contain : allow 127/8 - if it doesn't the exporter's ntp plugin can't connect to chrony
+    rules:
+    - alert: Check clock skew
+      expr: |
+        label_replace((node_ntp_offset_seconds < -0.03 or node_ntp_offset_seconds > 0.03),"host","$1","instance","(.*):.*")
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Clock skew/drift detected"
+        description: "Clock skew detected on {{ $labels.host }}. Please confirm NTP is configured correctly on this host"
+  - name: Network_Checks
+    rules:
+    - alert: Network transmit/receive errors
+      expr: |
+        label_replace(node_network_transmit_errs_total, "host", "$1", "instance", "(.*):.*") > 0 or 
+        label_replace(node_network_receive_errs_total, "host", "$1", "instance", "(.*):.*") > 0
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Network card showing send/receive errors on host '{{ $labels.host }}'"
+        description: "Interface '{{ $labels.device }}' on host {{ $labels.host }} has errors. Please check cabling and network switch logs"
+    - alert: Network port down
+      expr: |
+        label_replace(node_network_up{interface=~"(eth|en|bond|ib|mlx).*"}, "host", "$1", "instance", "(.*):.*") == 0
+      for: 30s
+      labels:    
+        severity: warning
+      annotations:
+        summary: "Network interface is down on {{ $labels.host }}"
+        description: "Interface '{{ $labels.interface }}' on host {{ $labels.host }} is down. Please check cabling, and network switch logs"
+    - alert: Network port flapping
+      expr: | 
+        label_replace(changes(node_network_up[30s]), "host", "$1","instance","(.*):.*") > 2
+      for: 30s
+      labels:
+        severity: warning
+      annotations:
+        summary: "Network interface 'flapping' on host {{ $labels.host }}"
+        description: "Interface '{{ $labels.interface }}' on '{{ $labels.host }}' is changing state (up/down) too often"
+
