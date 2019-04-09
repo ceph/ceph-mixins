@@ -14,6 +14,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'disk',
               message: 'Additional load recovery places on ceph cluster. Client IO could be affected.',
               description: 'Additional load recovery places on ceph cluster. Client IO could be affected.',
               storage_type: $._config.storageType,
@@ -30,6 +31,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'disk',
               message: 'Disk not responding',
               description: 'Disk not responding, on host {{ $labels.host }} (device {{ $labels.device }})',
               storage_type: $._config.storageType,
@@ -46,6 +48,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'disk',
               message: 'Disk is inaccessible',
               description: 'Disk inaccessible on host {{ $labels.host }} (device {{ $labels.device }})',
               storage_type: $._config.storageType,
@@ -62,6 +65,7 @@
               severity: 'info',
             },
             annotations: {
+              group:'disk',
               message: 'Data recovery is active',
               description: 'Data recovery is active, resynchronizing data to the required data protection level',
               storage_type: $._config.storageType,
@@ -78,6 +82,7 @@
               severity: 'info',
             },
             annotations: {
+              group:'disk',
               message: 'Data recovery is queued',
               description: 'Data recovery is queued',
               storage_type: $._config.storageType,
@@ -94,6 +99,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'disk',
               message: 'Data recovery is slow',
               description: 'Data recovery has been active for over %s. Contact Support' % $._config.osdDataRecoveryAlertTime,
               storage_type: $._config.storageType,
@@ -110,6 +116,7 @@
               severity: 'info',
             },
             annotations: {
+              group:'disk',
               message: 'Data rebalance queued',
               description: 'Data rebalance is queued (rebalance improves disk utilization and performance)',
               storage_type: $._config.storageType,
@@ -126,6 +133,7 @@
               severity: 'info',
             },
             annotations: {
+              group:'disk',
               message: 'Data rebalance active',
               description: 'Data rebalance is active (rebalance improves disk utilization and performance)',
               storage_type: $._config.storageType,
@@ -142,6 +150,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'disk',
               message: 'Problems detected within self heal',
               description: 'Self Heal operations taking too long. Contact Support',
               storage_type: $._config.storageType,

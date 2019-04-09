@@ -14,6 +14,7 @@
               severity: 'critical',
             },
             annotations: {
+              group:'host',
               message: 'Storage cluster is in error state',
               description: 'Storage cluster is in error state for more than %s.' % $._config.clusterStateAlertTime,
               storage_type: $._config.storageType,
@@ -30,6 +31,7 @@
               severity: 'warning',
             },
             annotations: {
+              group:'host',
               message: 'Storage cluster is in warning state',
               description: 'Storage cluster is in warning state for more than %s.' % $._config.clusterStateAlertTime,
               storage_type: $._config.storageType,

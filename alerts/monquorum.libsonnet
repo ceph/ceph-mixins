@@ -14,6 +14,7 @@
               severity: 'warning',
             },
             annotations: {
+              group: 'host',
               message: 'Storage quorum at risk',
               description: 'Quorum is low for storage cluster. Please Contact Support',
               storage_type: $._config.storageType,

@@ -8,59 +8,12 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
-  - name: cluster-state-alert.rules
-    rules:
-    - alert: CephClusterErrorState
-      annotations:
-        description: Storage cluster is in error state for more than 10m.
-        message: Storage cluster is in error state
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        ceph_health_status{job="rook-ceph-mgr"} > 1
-      for: 10m
-      labels:
-        severity: critical
-    - alert: CephClusterWarningState
-      annotations:
-        description: Storage cluster is in warning state for more than 10m.
-        message: Storage cluster is in warning state
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        ceph_health_status{job="rook-ceph-mgr"} == 1
-      for: 10m
-      labels:
-        severity: warning
-  - name: cluster-utilization-alert.rules
-    rules:
-    - alert: CephClusterNearFull
-      annotations:
-        description: The utilization of storage cluster has crossed 85%.
-        message: Storage cluster is nearing full. An expansion is required
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.85
-      for: 5m
-      labels:
-        severity: warning
-    - alert: CephClusterCriticallyFull
-      annotations:
-        description: The utilization of storage cluster has crossed 95%.
-        message: Storage cluster is critically full and needs immediate expansion
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.95
-      for: 5m
-      labels:
-        severity: critical
   - name: quorum-alert.rules
     rules:
     - alert: MonQuorumAtRisk
       annotations:
         description: Quorum is low for storage cluster. Please Contact Support
+        group: host
         message: Storage quorum at risk
         severity_level: warning
         storage_type: ceph
@@ -75,6 +28,7 @@ spec:
       annotations:
         description: Additional load recovery places on ceph cluster. Client IO could
           be affected.
+        group: disk
         message: Additional load recovery places on ceph cluster. Client IO could
           be affected.
         severity_level: warning
@@ -88,6 +42,7 @@ spec:
       annotations:
         description: Disk not responding, on host {{ $labels.host }} (device {{ $labels.device
           }})
+        group: disk
         message: Disk not responding
         severity_level: warning
         storage_type: ceph
@@ -100,6 +55,7 @@ spec:
       annotations:
         description: Disk inaccessible on host {{ $labels.host }} (device {{ $labels.device
           }})
+        group: disk
         message: Disk is inaccessible
         severity_level: warning
         storage_type: ceph
@@ -112,6 +68,7 @@ spec:
       annotations:
         description: Data recovery is active, resynchronizing data to the required
           data protection level
+        group: disk
         message: Data recovery is active
         severity_level: info
         storage_type: ceph
@@ -123,6 +80,7 @@ spec:
     - alert: CephDataRecoveryQueued
       annotations:
         description: Data recovery is queued
+        group: disk
         message: Data recovery is queued
         severity_level: info
         storage_type: ceph
@@ -134,6 +92,7 @@ spec:
     - alert: CephDataRecoveryTakingTooLong
       annotations:
         description: Data recovery has been active for over 2h. Contact Support
+        group: disk
         message: Data recovery is slow
         severity_level: warning
         storage_type: ceph
@@ -146,6 +105,7 @@ spec:
       annotations:
         description: Data rebalance is queued (rebalance improves disk utilization
           and performance)
+        group: disk
         message: Data rebalance queued
         severity_level: info
         storage_type: ceph
@@ -158,6 +118,7 @@ spec:
       annotations:
         description: Data rebalance is active (rebalance improves disk utilization
           and performance)
+        group: disk
         message: Data rebalance active
         severity_level: info
         storage_type: ceph
@@ -169,6 +130,7 @@ spec:
     - alert: CephPGRepairTakingTooLong
       annotations:
         description: Self Heal operations taking too long. Contact Support
+        group: disk
         message: Problems detected within self heal
         severity_level: warning
         storage_type: ceph
@@ -177,3 +139,55 @@ spec:
       for: 1h
       labels:
         severity: warning
+  - name: cluster-state-alert.rules
+    rules:
+    - alert: CephClusterErrorState
+      annotations:
+        description: Storage cluster is in error state for more than 10m.
+        group: host
+        message: Storage cluster is in error state
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} > 1
+      for: 10m
+      labels:
+        severity: critical
+    - alert: CephClusterWarningState
+      annotations:
+        description: Storage cluster is in warning state for more than 10m.
+        group: host
+        message: Storage cluster is in warning state
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} == 1
+      for: 10m
+      labels:
+        severity: warning
+  - name: cluster-utilization-alert.rules
+    rules:
+    - alert: CephClusterNearFull
+      annotations:
+        description: The utilization of storage cluster has crossed 85%.
+        group: host
+        message: Storage cluster is nearing full. An expansion is required
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.85
+      for: 5m
+      labels:
+        severity: warning
+    - alert: CephClusterCriticallyFull
+      annotations:
+        description: The utilization of storage cluster has crossed 95%.
+        group: host
+        message: Storage cluster is critically full and needs immediate expansion
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.95
+      for: 5m
+      labels:
+        severity: critical
