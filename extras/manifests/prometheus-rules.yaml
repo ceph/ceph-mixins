@@ -8,54 +8,6 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
-  - name: cluster-state-alert.rules
-    rules:
-    - alert: CephClusterErrorState
-      annotations:
-        description: Storage cluster is in error state for more than 10m.
-        message: Storage cluster is in error state
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        ceph_health_status{job="rook-ceph-mgr"} > 1
-      for: 10m
-      labels:
-        severity: critical
-    - alert: CephClusterWarningState
-      annotations:
-        description: Storage cluster is in warning state for more than 10m.
-        message: Storage cluster is in warning state
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        ceph_health_status{job="rook-ceph-mgr"} == 1
-      for: 10m
-      labels:
-        severity: warning
-  - name: cluster-utilization-alert.rules
-    rules:
-    - alert: CephClusterNearFull
-      annotations:
-        description: The utilization of storage cluster has crossed 85%.
-        message: Storage cluster is nearing full. An expansion is required
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.85
-      for: 5m
-      labels:
-        severity: warning
-    - alert: CephClusterCriticallyFull
-      annotations:
-        description: The utilization of storage cluster has crossed 95%.
-        message: Storage cluster is critically full and needs immediate expansion
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.95
-      for: 5m
-      labels:
-        severity: critical
   - name: quorum-alert.rules
     rules:
     - alert: MonQuorumAtRisk
@@ -71,19 +23,6 @@ spec:
         severity: warning
   - name: osd-alert.rules
     rules:
-    - alert: CephOSDsDown
-      annotations:
-        description: Additional load recovery places on ceph cluster. Client IO could
-          be affected.
-        message: Additional load recovery places on ceph cluster. Client IO could
-          be affected.
-        severity_level: warning
-        storage_type: ceph
-      expr: |
-        (count(ceph_osd_up * on(ceph_daemon) ceph_osd_in == 0) > 0) and ((ceph_pg_total - on(job) ceph_pg_clean) > 0)
-      for: 5m
-      labels:
-        severity: warning
     - alert: CephOSDDiskNotResponding
       annotations:
         description: Disk not responding, on host {{ $labels.host }} (device {{ $labels.device
@@ -177,3 +116,51 @@ spec:
       for: 1h
       labels:
         severity: warning
+  - name: cluster-state-alert.rules
+    rules:
+    - alert: CephClusterErrorState
+      annotations:
+        description: Storage cluster is in error state for more than 10m.
+        message: Storage cluster is in error state
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} > 1
+      for: 10m
+      labels:
+        severity: critical
+    - alert: CephClusterWarningState
+      annotations:
+        description: Storage cluster is in warning state for more than 10m.
+        message: Storage cluster is in warning state
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="rook-ceph-mgr"} == 1
+      for: 10m
+      labels:
+        severity: warning
+  - name: cluster-utilization-alert.rules
+    rules:
+    - alert: CephClusterNearFull
+      annotations:
+        description: The utilization of storage cluster has crossed 85%.
+        message: Storage cluster is nearing full. An expansion is required
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.85
+      for: 5m
+      labels:
+        severity: warning
+    - alert: CephClusterCriticallyFull
+      annotations:
+        description: The utilization of storage cluster has crossed 95%.
+        message: Storage cluster is critically full and needs immediate expansion
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.95
+      for: 5m
+      labels:
+        severity: critical
