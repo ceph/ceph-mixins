@@ -5,22 +5,6 @@
         name: 'osd-alert.rules',
         rules: [
           {
-            alert: 'CephOSDsDown',
-            expr: |||
-              (count(ceph_osd_up * on(ceph_daemon) ceph_osd_in == 0) > 0) and ((ceph_pg_total - on(job) ceph_pg_clean) > 0)
-            ||| % $._config,
-            'for': $._config.osdDownAlertTime,
-            labels: {
-              severity: 'warning',
-            },
-            annotations: {
-              message: 'Additional load recovery places on ceph cluster. Client IO could be affected.',
-              description: 'Additional load recovery places on ceph cluster. Client IO could be affected.',
-              storage_type: $._config.storageType,
-              severity_level: 'warning',
-            },
-          },
-          {
             alert: 'CephOSDDiskNotResponding',
             expr: |||
               label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
