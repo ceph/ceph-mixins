@@ -9,6 +9,9 @@ fmt:
 prometheus_alert_rules.yaml: mixin.libsonnet lib/alerts.jsonnet alerts/*.libsonnet
 	jsonnet -S lib/alerts.jsonnet > $@
 
+prometheus_rules.yaml: mixin.libsonnet lib/rules.jsonnet rules/*.libsonnet
+	jsonnet -S lib/rules.jsonnet > $@
+
 lint: prometheus_alert_rules.yaml
 	find . -name 'vendor' -prune -o -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \
 		while read f; do \

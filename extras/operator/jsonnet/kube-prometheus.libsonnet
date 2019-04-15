@@ -11,7 +11,7 @@ local configMapList = k.core.v1.configMapList;
     namespace: 'default',
 
     prometheus+:: {
-      rules: $.prometheusAlerts,
+      rules: $.prometheusRules + $.prometheusAlerts,
     },
   },
 }

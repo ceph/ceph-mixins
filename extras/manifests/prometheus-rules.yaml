@@ -8,6 +8,11 @@ metadata:
   namespace: openshift-storage
 spec:
   groups:
+  - name: ceph.rules
+    rules:
+    - expr: |
+        kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"} * on (node) group_right() max(label_replace(ceph_disk_occupation,"node","$1","exported_instance","(.*)")) by (node) == 0
+      record: ceph_node_down
   - name: quorum-alert.rules
     rules:
     - alert: CephMonQuorumAtRisk
@@ -93,6 +98,18 @@ spec:
       for: 10m
       labels:
         severity: warning
+    - alert: CephNodeDown
+      annotations:
+        description: Ceph Storage node {{ $labels.node }} went down. Please check
+          the node immeditely.
+        message: Ceph Storage node {{ $labels.node }} went down
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        ceph_node_down
+      for: 30s
+      labels:
+        severity: critical
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull

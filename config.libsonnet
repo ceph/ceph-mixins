@@ -4,6 +4,7 @@
     cephExporterSelector: 'job="rook-ceph-mgr"',
 
     // Duration to raise various Alerts
+    cephNodeDownAlertTime: '30s',
     clusterStateAlertTime: '10m',
     clusterUtilizationAlertTime: '5m',
     monQuorumAlertTime: '15m',
