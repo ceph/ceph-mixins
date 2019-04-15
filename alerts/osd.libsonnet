@@ -11,13 +11,13 @@
             ||| % $._config,
             'for': $._config.osdDiskAlertTime,
             labels: {
-              severity: 'warning',
+              severity: 'critical',
             },
             annotations: {
               message: 'Disk not responding',
-              description: 'Disk not responding, on host {{ $labels.host }} (device {{ $labels.device }})',
+              description: 'Disk device {{ $labels.device }} not responding, on host {{ $labels.host }}.',
               storage_type: $._config.storageType,
-              severity_level: 'warning',
+              severity_level: 'error',
             },
           },
           {
@@ -27,45 +27,13 @@
             ||| % $._config,
             'for': $._config.osdDiskAlertTime,
             labels: {
-              severity: 'warning',
+              severity: 'critical',
             },
             annotations: {
-              message: 'Disk is inaccessible',
-              description: 'Disk inaccessible on host {{ $labels.host }} (device {{ $labels.device }})',
+              message: 'Disk not accessible',
+              description: 'Disk device {{ $labels.device }} not accessible on host {{ $labels.host }}.',
               storage_type: $._config.storageType,
-              severity_level: 'warning',
-            },
-          },
-          {
-            alert: 'CephDataRecoveryActive',
-            expr: |||
-              rate(ceph_pg_undersized[30s]) > 0 and ceph_pg_undersized > 0
-            ||| % $._config,
-            'for': $._config.osdDataRecoveryInProgressAlertTime,
-            labels: {
-              severity: 'info',
-            },
-            annotations: {
-              message: 'Data recovery is active',
-              description: 'Data recovery is active, resynchronizing data to the required data protection level',
-              storage_type: $._config.storageType,
-              severity_level: 'info',
-            },
-          },
-          {
-            alert: 'CephDataRecoveryQueued',
-            expr: |||
-              rate(ceph_pg_undersized[30s]) == 0 and ceph_pg_undersized > 0
-            ||| % $._config,
-            'for': $._config.osdDataRecoveryInProgressAlertTime,
-            labels: {
-              severity: 'info',
-            },
-            annotations: {
-              message: 'Data recovery is queued',
-              description: 'Data recovery is queued',
-              storage_type: $._config.storageType,
-              severity_level: 'info',
+              severity_level: 'error',
             },
           },
           {
@@ -79,41 +47,9 @@
             },
             annotations: {
               message: 'Data recovery is slow',
-              description: 'Data recovery has been active for over %s. Contact Support' % $._config.osdDataRecoveryAlertTime,
+              description: 'Data recovery has been active for more than %s. Contact Support.' % $._config.osdDataRecoveryAlertTime,
               storage_type: $._config.storageType,
               severity_level: 'warning',
-            },
-          },
-          {
-            alert: 'CephDataRebalanceQueued',
-            expr: |||
-              rate(ceph_pg_remapped[30s]) == 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
-            ||| % $._config,
-            'for': $._config.osdDataRebalanceAlertTime,
-            labels: {
-              severity: 'info',
-            },
-            annotations: {
-              message: 'Data rebalance queued',
-              description: 'Data rebalance is queued (rebalance improves disk utilization and performance)',
-              storage_type: $._config.storageType,
-              severity_level: 'info',
-            },
-          },
-          {
-            alert: 'CephDataRebalanceActive',
-            expr: |||
-              rate(ceph_pg_remapped[30s]) > 0 and ceph_pg_remapped > 0 and ceph_pg_undersized == 0
-            ||| % $._config,
-            'for': $._config.osdDataRebalanceAlertTime,
-            labels: {
-              severity: 'info',
-            },
-            annotations: {
-              message: 'Data rebalance active',
-              description: 'Data rebalance is active (rebalance improves disk utilization and performance)',
-              storage_type: $._config.storageType,
-              severity_level: 'info',
             },
           },
           {
@@ -126,8 +62,8 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'Problems detected within self heal',
-              description: 'Self Heal operations taking too long. Contact Support',
+              message: 'Self heal problems detected',
+              description: 'Self heal operations taking too long. Contact Support.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
