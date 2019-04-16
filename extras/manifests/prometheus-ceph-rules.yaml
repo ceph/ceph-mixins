@@ -2,10 +2,10 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    prometheus: alert
+    prometheus: k8s
     role: alert-rules
-  name: prometheus-alert-rules
-  namespace: openshift-storage
+  name: prometheus-ceph-rules
+  namespace: default
 spec:
   groups:
   - name: ceph.rules

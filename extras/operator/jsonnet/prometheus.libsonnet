@@ -5,7 +5,7 @@ local k = import 'ksonnet/ksonnet.beta.3/k.libsonnet';
     namespace: 'default',
 
     prometheus+:: {
-      name: 'alert',
+      name: 'k8s',
       rules: {},
       renderedRules: {},
       namespaces: $._config.namespace,
@@ -21,7 +21,7 @@ local k = import 'ksonnet/ksonnet.beta.3/k.libsonnet';
             prometheus: $._config.prometheus.name,
             role: 'alert-rules',
           },
-          name: 'prometheus-' + $._config.prometheus.name + '-rules',
+          name: 'prometheus-ceph-rules',
           namespace: $._config.namespace,
         },
         spec: {
