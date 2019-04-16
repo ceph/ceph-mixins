@@ -1,5 +1,5 @@
 VERSION := 0
-RELEASE := 1
+RELEASE := 2
 
 JSONNET_FMT := jsonnet fmt -n 2 --max-blank-lines 2 --string-style s --comment-style s
 
