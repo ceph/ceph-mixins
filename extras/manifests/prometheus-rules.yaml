@@ -11,8 +11,8 @@ spec:
   - name: ceph.rules
     rules:
     - expr: |
-        kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"} * on (node) group_right() max(label_replace(ceph_disk_occupation,"node","$1","exported_instance","(.*)")) by (node) == 0
-      record: ceph_node_down
+        kube_node_status_condition{condition="Ready",job="kube-state-metrics",status="true"} * on (node) group_right() max(label_replace(ceph_disk_occupation{job="rook-ceph-mgr"},"node","$1","exported_instance","(.*)")) by (node) == 0
+      record: cluster:ceph_node_down:join_kube
   - name: quorum-alert.rules
     rules:
     - alert: CephMonQuorumAtRisk
@@ -24,6 +24,20 @@ spec:
       expr: |
         count(ceph_mon_quorum_status == 1) <= ((count(ceph_mon_metadata) % 2) + 1)
       for: 15m
+      labels:
+        severity: critical
+  - name: ceph-node-alert.rules
+    rules:
+    - alert: CephNodeDown
+      annotations:
+        description: Storage node {{ $labels.node }} went down. Please check the node
+          immediately.
+        message: Storage node {{ $labels.node }} went down
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        cluster:ceph_node_down:join_kube
+      for: 30s
       labels:
         severity: critical
   - name: osd-alert.rules
@@ -98,18 +112,6 @@ spec:
       for: 10m
       labels:
         severity: warning
-    - alert: CephNodeDown
-      annotations:
-        description: Ceph Storage node {{ $labels.node }} went down. Please check
-          the node immeditely.
-        message: Ceph Storage node {{ $labels.node }} went down
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        ceph_node_down
-      for: 30s
-      labels:
-        severity: critical
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull

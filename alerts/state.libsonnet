@@ -36,22 +36,6 @@
               severity_level: 'warning',
             },
           },
-          {
-            alert: 'CephNodeDown',
-            expr: |||
-              ceph_node_down
-            ||| % $._config,
-            'for': $._config.cephNodeDownAlertTime,
-            labels: {
-              severity: 'critical',
-            },
-            annotations: {
-              message: 'Ceph Storage node {{ $labels.node }} went down',
-              description: 'Ceph Storage node {{ $labels.node }} went down. Please check the node immeditely.',
-              storage_type: $._config.storageType,
-              severity_level: 'error',
-            },
-          },
         ],
       },
     ],
