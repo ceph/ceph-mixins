@@ -6,6 +6,7 @@
     // Duration to raise various Alerts
     cephNodeDownAlertTime: '30s',
     clusterStateAlertTime: '10m',
+    clusterVersionAlertTime: '10m',
     clusterUtilizationAlertTime: '5m',
     monQuorumAlertTime: '15m',
     osdDataRebalanceAlertTime: '15s',
