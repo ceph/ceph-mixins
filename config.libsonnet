@@ -18,6 +18,8 @@
     osdDiskAlertTime: '1m',
     osdDownAlertTime: '5m',
     PGRepairAlertTime: '1h',
+    mgrMissingReplicasAlertTime: '5m',
+    mgrIsAbsentAlertTime: '5m',
 
     // Constants
     storageType: 'ceph',
