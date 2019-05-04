@@ -30,7 +30,10 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'Ceph Monitor "{{ $labels.job }}": instance {{ $labels.instance }} has seen {{ $value }} leader changes recently',
+              message: 'Ceph Monitor has seen many leader changes recently.',
+              description: 'Ceph Monitor "{{ $labels.job }}": instance {{ $labels.instance }} has seen {{ $value }} leader changes recently.',
+              storage_type: $._config.storageType,
+              severity_level: 'warning',
             },
           },
         ],
