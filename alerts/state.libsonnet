@@ -41,12 +41,14 @@
             expr: |||
               count(count(ceph_osd_metadata{%(cephExporterSelector)s}) by (ceph_version)) > 1
             ||| % $._config,
-            'for': '1h',
+            'for': $._config.clusterVersionAlertTime,
             labels: {
-              'for': $._config.clusterVersionAlertTime,
+              severity: 'warning',
             },
             annotations: {
-              message: 'There are {{ $value }} different versions of Ceph OSD components running.',
+              message: 'There are multiple versions of Ceph OSD running.',
+              description: 'There are {{ $value }} different versions of Ceph OSD components running.',
+              storage_type: $._config.storageType,
               severity_level: 'warning',
             },
           },
@@ -60,7 +62,9 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'There are {{ $value }} different versions of Ceph Mon components running.',
+              message: 'There are multiple versions of Ceph Mon running.',
+              description: 'There are {{ $value }} different versions of Ceph Mon components running.',
+              storage_type: $._config.storageType,
               severity_level: 'warning',
             },
           },
