@@ -5,19 +5,6 @@
 
     // Number of Ceph Managers which are reporting metrics
     cephMgrCount: 3,
-    // Number of Ceph Monitors
-    cephMonCount: 3,
-    // Number of Ceph OSDs
-    cephOsdCount: 3,
-
-    // Grafana url for Ceph-Cluster dashboard
-    grafanaClusterDashboardURL: '',
-    // Grafana url for OSD overview dashboard
-    grafanaOSDDashboardURL: '',
-    // Grafana url for Ceph-Cluster dashboard
-    grafanaMonDashboardURL: '',
-    // Grafana url for Ceph-Cluster dashboard
-    grafanaMgrDashboardURL: '',
 
     // Duration to raise various Alerts
     cephNodeDownAlertTime: '30s',
