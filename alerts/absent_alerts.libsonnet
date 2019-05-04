@@ -9,7 +9,7 @@
             expr: |||
               absent(up{%(cephExporterSelector)s} == 1)
             ||| % $._config,
-            'for': '5m',
+            'for': $._config.mgrIsAbsentAlertTime,
             labels: {
               severity: 'warning',
             },
@@ -30,7 +30,7 @@
             expr: |||
               sum(up{%(cephExporterSelector)s}) != %(cephMgrCount)d
             ||| % $._config,
-            'for': '5m',
+            'for': $._config.mgrMissingReplicasAlertTime,
             labels: {
               severity: 'warning',
             },
