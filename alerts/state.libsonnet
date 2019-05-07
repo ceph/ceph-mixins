@@ -46,7 +46,7 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'There are multiple versions of Ceph OSD running.',
+              message: 'There are multiple versions of storage services running.',
               description: 'There are {{ $value }} different versions of Ceph OSD components running.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
@@ -62,7 +62,7 @@
               severity: 'warning',
             },
             annotations: {
-              message: 'There are multiple versions of Ceph Mon running.',
+              message: 'There are multiple versions of storage services running.',
               description: 'There are {{ $value }} different versions of Ceph Mon components running.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
