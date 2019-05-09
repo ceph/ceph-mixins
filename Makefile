@@ -25,3 +25,12 @@ lint: prometheus_alert_rules.yaml
 
 clean:
 	rm -rf prometheus_alert_rules.yaml
+
+generate_k8s:
+	cd extras; cp manifests/prometheus-rules.yaml .; jb install; ./build.sh example.jsonnet; cd -
+	cmp -s extras/prometheus-rules.yaml extras/manifests/prometheus-rules.yaml; \
+	RETVAL=$$?; \
+	if [ $$RETVAL -eq 0 ]; then \
+		echo "Rule files are different"; \
+		exit 1; \
+	fi

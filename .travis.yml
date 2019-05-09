@@ -29,3 +29,4 @@ script:
     done
 
   - make all
+  - make generate_k8s
