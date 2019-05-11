@@ -2,7 +2,7 @@
   prometheusAlerts+:: {
     groups+: [
       {
-        name: 'ceph-absent',
+        name: 'ceph-mgr-status',
         rules: [
           {
             alert: 'CephMgrIsAbsent',
@@ -20,11 +20,6 @@
               severity_level: 'warning',
             },
           },
-        ],
-      },
-      {
-        name: 'ceph-down',
-        rules: [
           {
             alert: 'CephMgrIsMissingReplicas',
             expr: |||
