@@ -115,6 +115,43 @@ spec:
       for: 10m
       labels:
         severity: warning
+    - alert: CephOSDVersionMismatch
+      annotations:
+        description: There are {{ $value }} different versions of Ceph OSD components
+          running.
+        message: There are multiple versions of storage services running.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(count(ceph_osd_metadata{job="rook-ceph-mgr"}) by (ceph_version)) > 1
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CephMonVersionMismatch
+      annotations:
+        description: There are {{ $value }} different versions of Ceph Mon components
+          running.
+        message: There are multiple versions of storage services running.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(count(ceph_mon_metadata{job="rook-ceph-mgr"}) by (ceph_version)) > 1
+      for: 10m
+      labels:
+        severity: warning
+  - name: service.rules
+    rules:
+    - alert: AbsentRookCephMgr
+      annotations:
+        description: Rook-ceph-mgr service not present. Please check the deployment.
+        message: Rook-ceph-mgr service not present.
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        absent(up{job="rook-ceph-mgr",pod=~"rook-ceph-mgr-(.*)",service="rook-ceph-mgr"})==1
+      for: 5s
+      labels:
+        severity: critical
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull
