@@ -1,5 +1,5 @@
 {
-  prometheusAlerts+:: {
+  local prometheusAlertsObj = {
     groups+: [
       {
         name: 'service.rules',
@@ -24,5 +24,6 @@
       },
     ],
   },
+  prometheusAlerts+:: if $._config.alertAbsentRookCephMgr then prometheusAlertsObj else {},
 }
 

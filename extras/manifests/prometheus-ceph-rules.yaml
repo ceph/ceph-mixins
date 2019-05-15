@@ -139,19 +139,6 @@ spec:
       for: 10m
       labels:
         severity: warning
-  - name: service.rules
-    rules:
-    - alert: AbsentRookCephMgr
-      annotations:
-        description: Rook-ceph-mgr service not present. Please check the deployment.
-        message: Rook-ceph-mgr service not present.
-        severity_level: error
-        storage_type: ceph
-      expr: |
-        absent(up{job="rook-ceph-mgr",pod=~"rook-ceph-mgr-(.*)",service="rook-ceph-mgr"})==1
-      for: 5s
-      labels:
-        severity: critical
   - name: cluster-utilization-alert.rules
     rules:
     - alert: CephClusterNearFull

@@ -17,6 +17,9 @@
     osdDownAlertTime: '5m',
     PGRepairAlertTime: '1h',
 
+    //Alert settings. Enabled-true/Disabled-false
+    alertAbsentRookCephMgr: false,
+
     // Constants
     storageType: 'ceph',
 
