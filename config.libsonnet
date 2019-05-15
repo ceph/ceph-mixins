@@ -3,8 +3,8 @@
     // Selectors are inserted between {} in Prometheus queries.
     cephExporterSelector: 'job="rook-ceph-mgr"',
 
-    // Number of Ceph Managers which are reporting metrics
-    cephMgrCount: 3,
+    // Expected number of Ceph Managers which are reporting metrics
+    cephMgrCount: 1,
 
     // Duration to raise various Alerts
     cephNodeDownAlertTime: '30s',

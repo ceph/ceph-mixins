@@ -23,14 +23,14 @@
           {
             alert: 'CephMgrIsMissingReplicas',
             expr: |||
-              sum(up{%(cephExporterSelector)s}) != %(cephMgrCount)d
+              sum(up{%(cephExporterSelector)s}) < %(cephMgrCount)d
             ||| % $._config,
             'for': $._config.mgrMissingReplicasAlertTime,
             labels: {
               severity: 'warning',
             },
             annotations: {
-              message: 'Storage metrics collector service not available anymore.',
+              message: "Storage metrics collector service doesn't have required no of replicas.",
               description: 'Ceph Manager is missing replicas.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
