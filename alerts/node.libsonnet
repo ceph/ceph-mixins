@@ -7,7 +7,7 @@
           {
             alert: 'CephNodeDown',
             expr: |||
-              cluster:ceph_node_down:join_kube
+              cluster:ceph_node_down:join_kube == 0
             ||| % $._config,
             'for': $._config.cephNodeDownAlertTime,
             labels: {
