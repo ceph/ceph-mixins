@@ -23,7 +23,7 @@
           {
             alert: 'CephMonHighNumberOfLeaderChanges',
             expr: |||
-              rate(ceph_mon_num_elections{%(cephExporterSelector)s}[15m]) > 3
+              rate(ceph_mon_num_elections{%(cephExporterSelector)s}[10m]) > 0
             ||| % $._config,
             'for': $._config.monQuorumLeaderChangesAlertTime,
             labels: {
