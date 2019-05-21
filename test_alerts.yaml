@@ -8,14 +8,14 @@ tests:
         values: '0 1 2 3 4 5 6 7 8 9 10 11 12'
     alert_rule_test:
       - alertname: CephMonHighNumberOfLeaderChanges
-        eval_time: 11m
+        eval_time: 6m
         exp_alerts:
          - exp_labels:
              severity: warning
              job: rook-ceph-mgr
            exp_annotations:
              message: 'Storage Cluster has seen many leader changes recently.'
-             description: 'Ceph Monitor "rook-ceph-mgr": instance  has seen 0.016666666666666666 leader changes recently.'
+             description: 'Ceph Monitor "rook-ceph-mgr": instance  has seen 1 leader changes per minute recently.'
              storage_type: 'ceph'
              severity_level: 'warning'
 
