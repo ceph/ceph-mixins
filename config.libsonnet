@@ -12,7 +12,7 @@
     clusterVersionAlertTime: '10m',
     clusterUtilizationAlertTime: '5m',
     monQuorumAlertTime: '15m',
-    monQuorumLeaderChangesAlertTime: '0s',
+    monQuorumLeaderChangesAlertTime: '5m',
     osdDataRebalanceAlertTime: '15s',
     osdDataRecoveryAlertTime: '2h',
     osdDataRecoveryInProgressAlertTime: '30s',
