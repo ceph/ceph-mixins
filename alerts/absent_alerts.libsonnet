@@ -38,6 +38,27 @@
           },
         ],
       },
+      {
+        name: 'ceph-mds-status',
+        rules: [
+          {
+            alert: 'CephMdsMissingReplicas',
+            expr: |||
+              sum(ceph_mds_metadata{%(cephExporterSelector)s} == 1) < 2
+            ||| % $._config,
+            'for': $._config.mdsMissingReplicasAlertTime,
+            labels: {
+              severity: 'warning',
+            },
+            annotations: {
+              message: 'Insufficient replicas for storage metadata service.',
+              description: 'Minimum required replicas for storage metadata service not available. Might affect the working of storage cluster.',
+              storage_type: $._config.storageType,
+              severity_level: 'warning',
+            },
+          },
+        ],
+      },
     ],
   },
 }

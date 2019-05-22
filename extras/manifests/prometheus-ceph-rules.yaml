@@ -40,6 +40,20 @@ spec:
       for: 5m
       labels:
         severity: warning
+  - name: ceph-mds-status
+    rules:
+    - alert: CephMdsMissingReplicas
+      annotations:
+        description: Minimum required replicas for storage metadata service not available.
+          Might affect the working of storage cluster.
+        message: Insufficient replicas for storage metadata service.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(ceph_mds_metadata{job="rook-ceph-mgr"} == 1) < 2
+      for: 5m
+      labels:
+        severity: warning
   - name: quorum-alert.rules
     rules:
     - alert: CephMonQuorumAtRisk
