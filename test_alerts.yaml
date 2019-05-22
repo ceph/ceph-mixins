@@ -4,6 +4,42 @@ evaluation_interval: 1m
 tests:
   - interval: 1m
     input_series:
+      - series: 'ceph_osd_metadata{job="rook-ceph-mgr", ceph_version="1"}'
+        values: '1+0x16'
+      - series: 'ceph_osd_metadata{job="rook-ceph-mgr", ceph_version="2"}'
+        values: '1+0x16'
+    alert_rule_test:
+      - alertname: CephOSDVersionMismatch
+        eval_time: 11m
+        exp_alerts:
+         - exp_labels:
+             severity: warning
+           exp_annotations:
+             message: 'There are multiple versions of storage services running.'
+             description: 'There are 2 different versions of Ceph OSD components running.'
+             storage_type: 'ceph'
+             severity_level: 'warning'
+
+  - interval: 1m
+    input_series:
+      - series: 'ceph_mon_metadata{job="rook-ceph-mgr", ceph_version="1"}'
+        values: '1+0x16'
+      - series: 'ceph_mon_metadata{job="rook-ceph-mgr", ceph_version="2"}'
+        values: '1+0x16'
+    alert_rule_test:
+      - alertname: CephMonVersionMismatch
+        eval_time: 11m
+        exp_alerts:
+         - exp_labels:
+             severity: warning
+           exp_annotations:
+             message: 'There are multiple versions of storage services running.'
+             description: 'There are 2 different versions of Ceph Mon components running.'
+             storage_type: 'ceph'
+             severity_level: 'warning'
+
+  - interval: 1m
+    input_series:
       - series: 'ceph_mon_num_elections{job="rook-ceph-mgr"}'
         values: '0 1 2 3 4 5 6 7 8 9 10 11 12'
     alert_rule_test:
