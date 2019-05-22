@@ -21,6 +21,7 @@
     PGRepairAlertTime: '1h',
     mgrMissingReplicasAlertTime: '5m',
     mgrIsAbsentAlertTime: '5m',
+    mdsMissingReplicasAlertTime: '5m',
 
     // Constants
     storageType: 'ceph',

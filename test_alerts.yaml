@@ -468,3 +468,41 @@ tests:
              severity_level: 'error'
       - alertname: CephOSDDiskUnavailable
         eval_time: 6m
+  - interval: 1m
+    input_series:
+      - series: 'ceph_mds_metadata{ceph_daemon="mds.myfs-a", job="rook-ceph-mgr"}'
+        values: '1+0x15'
+      - series: 'ceph_mds_metadata{ceph_daemon="mds.myfs-b", job="rook-ceph-mgr"}'
+        values: '1+0x05 0+0x10'
+    alert_rule_test:
+      - alertname: CephMdsMissingReplicas
+        eval_time: 4m
+      - alertname: CephMdsMissingReplicas
+        eval_time: 11m
+        exp_alerts:
+         - exp_labels:
+             severity: warning
+           exp_annotations:
+             message: 'Insufficient replicas for storage metadata service.'
+             description: 'Minimum required replicas for storage metadata service not available. Might affect the working of storage cluster.'
+             storage_type: 'ceph'
+             severity_level: 'warning'
+  - interval: 1m
+    input_series:
+      - series: 'ceph_mds_metadata{ceph_daemon="mds.myfs-a", job="rook-ceph-mgr"}'
+        values: '0+0x10 1+0x05'
+      - series: 'ceph_mds_metadata{ceph_daemon="mds.myfs-b", job="rook-ceph-mgr"}'
+        values: '1+0x15'
+    alert_rule_test:
+      - alertname: CephMdsMissingReplicas
+        eval_time: 6m
+        exp_alerts:
+         - exp_labels:
+             severity: warning
+           exp_annotations:
+             message: 'Insufficient replicas for storage metadata service.'
+             description: 'Minimum required replicas for storage metadata service not available. Might affect the working of storage cluster.'
+             storage_type: 'ceph'
+             severity_level: 'warning'
+      - alertname: CephMdsMissingReplicas
+        eval_time: 11m
