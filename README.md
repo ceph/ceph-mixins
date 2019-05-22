@@ -1,8 +1,8 @@
 # Prometheus Monitoring Mixin for Ceph
 
-A set of Grafana dashboards and Prometheus alerts for Ceph.
+A set of Prometheus alerts for Ceph.
 
-The scope of this project is to provide Ceph specific Grafana dashboard configs and Prometheus rule files using Prometheus Mixins.
+The scope of this project is to provide Ceph specific Prometheus rule files using Prometheus Mixins.
 
 ## Prerequisites
 * Jsonnet [[Install Jsonnet]](https://github.com/google/jsonnet#building-jsonnet)
@@ -35,17 +35,13 @@ $ cd ceph-mixins
 
 **To generate Prometheus Alert file**
 
-`$ make prometheus_alerts.yaml`
+`$ make prometheus_alert_ruless.yaml`
 
 **To generate Prometheus Rule file**
 
 `$ make prometheus_rules.yaml`
 
-**To generate Grafana Dashboard configs**
-
-`$ make dashboards_out`
-
-The **prometheus_alerts.yaml** and **prometheus_rules.yaml** files then needs to be passed to your Prometheus Server, and the files in **dashboards_out** needs to be passed to your Grafana server.
+The **prometheus_alert_rules.yaml** and **prometheus_rules.yaml** files then needs to be passed to your Prometheus Server.
 
 ## Background
 * [Prometheus Monitoring Mixin design doc](https://docs.google.com/document/d/1A9xvzwqnFVSOZ5fD3blKODXfsat5fg6ZhnKu9LK3lB4/edit#)
