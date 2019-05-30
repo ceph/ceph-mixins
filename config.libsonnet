@@ -5,6 +5,8 @@
 
     // Expected number of Ceph Managers which are reporting metrics
     cephMgrCount: 1,
+    // Expected number of Ceph Mds which are reporting metrics
+    cephMdsCount: 2,
 
     // Duration to raise various Alerts
     cephNodeDownAlertTime: '30s',

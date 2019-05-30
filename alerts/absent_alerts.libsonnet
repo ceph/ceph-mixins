@@ -44,7 +44,7 @@
           {
             alert: 'CephMdsMissingReplicas',
             expr: |||
-              sum(ceph_mds_metadata{%(cephExporterSelector)s} == 1) < 2
+              sum(ceph_mds_metadata{%(cephExporterSelector)s} == 1) < %(cephMdsCount)d
             ||| % $._config,
             'for': $._config.mdsMissingReplicasAlertTime,
             labels: {
