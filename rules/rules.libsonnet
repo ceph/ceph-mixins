@@ -117,30 +117,6 @@
               count(count(ceph_mon_metadata{%(cephExporterSelector)s}) by (ceph_version))
             ||| % $._config,
           },
-          {
-            record: 'job:ceph_mgr_metadata:distinct',
-            expr: |||
-              count(count(ceph_mgr_metadata{%(cephExporterSelector)s}) by (ceph_version))
-            ||| % $._config,
-          },
-          {
-            record: 'job:ceph_osd_metadata:distinct',
-            expr: |||
-              count(count(ceph_osd_metadata{%(cephExporterSelector)s}) by (ceph_version))
-            ||| % $._config,
-          },
-          {
-            record: 'job:ceph_mds_metadata:distinct',
-            expr: |||
-              count(count(ceph_mds_metadata{%(cephExporterSelector)s}) by (ceph_version))
-            ||| % $._config,
-          },
-          {
-            record: 'job:ceph_rgw_metadata:distinct',
-            expr: |||
-              count(count(ceph_rgw_metadata{%(cephExporterSelector)s}) by (ceph_version))
-            ||| % $._config,
-          },
         ],
       },
     ],
