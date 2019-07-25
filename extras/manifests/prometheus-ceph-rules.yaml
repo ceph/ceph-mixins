@@ -19,65 +19,20 @@ spec:
   - name: telemeter.rules
     rules:
     - expr: |
-        count(ceph_osd_in{job="rook-ceph-mgr"} == 1)
-      record: job:ceph_osd_in:count
-    - expr: |
-        count(ceph_osd_up{job="rook-ceph-mgr"} == 1)
-      record: job:ceph_osd_up:count
-    - expr: |
-        count(ceph_osd_metadata{job="rook-ceph-mgr", objectstore = 'bluestore'})
-      record: job:ceph_osd_metadata:count_bluestore
-    - expr: |
-        count(ceph_osd_metadata{job="rook-ceph-mgr", objectstore = 'filestore'})
-      record: job:ceph_osd_metadata:count_filestore
-    - expr: |
-        count(ceph_osd_metadata{job="rook-ceph-mgr", device_class = 'ssd'})
-      record: job:ceph_osd_metadata:count_ssd
-    - expr: |
-        count(ceph_osd_metadata{job="rook-ceph-mgr", device_class = 'hdd'})
-      record: job:ceph_osd_metadata:count_hdd
-    - expr: |
-        sum(ceph_pool_rd{job="rook-ceph-mgr"})
-      record: job:ceph_pool_rd:total
-    - expr: |
-        sum(ceph_pool_wr{job="rook-ceph-mgr"})
-      record: job:ceph_pool_wr:total
-    - expr: |
-        sum(ceph_pool_rd_bytes{job="rook-ceph-mgr"})
-      record: job:ceph_pool_rd_bytes:total
-    - expr: |
-        sum(ceph_pool_wr_bytes{job="rook-ceph-mgr"})
-      record: job:ceph_pool_wr_bytes:total
-    - expr: |
-        count(ceph_mds_metadata{job="rook-ceph-mgr"})
-      record: job:ceph_mds_metadata:count
-    - expr: |
-        count(ceph_mon_metadata{job="rook-ceph-mgr"})
-      record: job:ceph_mon_metadata:count
-    - expr: |
         count(ceph_osd_metadata{job="rook-ceph-mgr"})
       record: job:ceph_osd_metadata:count
     - expr: |
-        count(ceph_mgr_metadata{job="rook-ceph-mgr"})
-      record: job:ceph_mgr_metadata:count
+        count(kube_persistentvolume_info)
+      record: job:kube_pv:count
     - expr: |
-        count(ceph_rgw_metadata{job="rook-ceph-mgr"})
-      record: job:ceph_rgw_metadata:count
+        sum(ceph_pool_rd{job="rook-ceph-mgr"}+ ceph_pool_wr{job="rook-ceph-mgr"})
+      record: job:ceph_pools_iops:total
     - expr: |
-        count(count(ceph_mon_metadata{job="rook-ceph-mgr"}) by (ceph_version))
-      record: job:ceph_mon_metadata:distinct
+        sum(ceph_pool_rd_bytes{job="rook-ceph-mgr"}+ ceph_pool_wr_bytes{job="rook-ceph-mgr"})
+      record: job:ceph_pools_iops_bytes:total
     - expr: |
-        count(count(ceph_mgr_metadata{job="rook-ceph-mgr"}) by (ceph_version))
-      record: job:ceph_mgr_metadata:distinct
-    - expr: |
-        count(count(ceph_osd_metadata{job="rook-ceph-mgr"}) by (ceph_version))
-      record: job:ceph_osd_metadata:distinct
-    - expr: |
-        count(count(ceph_mds_metadata{job="rook-ceph-mgr"}) by (ceph_version))
-      record: job:ceph_mds_metadata:distinct
-    - expr: |
-        count(count(ceph_rgw_metadata{job="rook-ceph-mgr"}) by (ceph_version))
-      record: job:ceph_rgw_metadata:distinct
+        count(count(ceph_mon_metadata{job="rook-ceph-mgr"} or ceph_osd_metadata{job="rook-ceph-mgr"} or ceph_rgw_metadata{job="rook-ceph-mgr"} or ceph_mds_metadata{job="rook-ceph-mgr"} or ceph_mgr_metadata{job="rook-ceph-mgr"}) by(ceph_version))
+      record: job:ceph_versions_running:count
   - name: ceph-mgr-status
     rules:
     - alert: CephMgrIsAbsent
