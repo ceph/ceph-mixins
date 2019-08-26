@@ -11,13 +11,13 @@
             ||| % $._config,
             'for': $._config.mgrIsAbsentAlertTime,
             labels: {
-              severity: 'warning',
+              severity: 'critical',
             },
             annotations: {
               message: 'Storage metrics collector service not available anymore.',
               description: 'Ceph Manager has disappeared from Prometheus target discovery.',
               storage_type: $._config.storageType,
-              severity_level: 'warning',
+              severity_level: 'critical',
             },
           },
           {

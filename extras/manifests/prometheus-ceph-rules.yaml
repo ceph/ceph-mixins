@@ -39,13 +39,13 @@ spec:
       annotations:
         description: Ceph Manager has disappeared from Prometheus target discovery.
         message: Storage metrics collector service not available anymore.
-        severity_level: warning
+        severity_level: critical
         storage_type: ceph
       expr: |
         absent(up{job="rook-ceph-mgr"} == 1)
       for: 5m
       labels:
-        severity: warning
+        severity: critical
     - alert: CephMgrIsMissingReplicas
       annotations:
         description: Ceph Manager is missing replicas.
