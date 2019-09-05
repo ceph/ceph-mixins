@@ -31,7 +31,7 @@
             },
             annotations: {
               message: 'Storage Cluster has seen many leader changes recently.',
-              description: 'Ceph Monitor "{{ $labels.job }}": instance {{ $labels.instance }} has seen {{ $value }} leader changes per minute recently.',
+              description: 'Ceph Monitor "{{ $labels.job }}": instance {{ $labels.instance }} has seen {{ $value | printf "%.2f" }} leader changes per minute recently.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
