@@ -47,7 +47,7 @@
             },
             annotations: {
               message: 'Data recovery is slow',
-              description: 'Data recovery has been active for more than %s. Contact Support.' % $._config.osdDataRecoveryAlertTime,
+              description: 'Data recovery has been active for too long. Contact Support.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
