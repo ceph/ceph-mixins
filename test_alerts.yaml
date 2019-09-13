@@ -286,7 +286,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Data recovery is slow'
-             description: 'Data recovery has been active for more than 2h. Contact Support.'
+             description: 'Data recovery has been active for too long. Contact Support.'
              storage_type: 'ceph'
              severity_level: 'warning'
   - interval: 1m
@@ -301,7 +301,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Data recovery is slow'
-             description: 'Data recovery has been active for more than 2h. Contact Support.'
+             description: 'Data recovery has been active for too long. Contact Support.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephDataRecoveryTakingTooLong
