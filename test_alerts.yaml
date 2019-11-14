@@ -1,6 +1,6 @@
 rule_files:
   - prometheus_alert_rules.yaml
-evaluation_interval: 1m
+evaluation_interval: 5s
 tests:
   - interval: 1m
     input_series:
@@ -131,7 +131,7 @@ tests:
              severity_level: 'warning'
       - alertname: CephClusterErrorState
         eval_time: 31m
-  - interval: 1m
+  - interval: 5s
     input_series:
       - series: 'ceph_osd_stat_bytes_used'
         values: '21474836480+0x5 26622320128+0x10'
@@ -139,18 +139,18 @@ tests:
         values: '26264513505+0x5 27526451350+0x10'
     alert_rule_test:
       - alertname: CephClusterNearFull
-        eval_time: 4m
+        eval_time: 20s
       - alertname: CephClusterNearFull
-        eval_time: 11m
+        eval_time: 40s
         exp_alerts:
          - exp_labels:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 85%.'
+             description: 'Storage cluster utilization has crossed 75%.'
              storage_type: 'ceph'
              severity_level: 'warning'
-  - interval: 1m
+  - interval: 5s
     input_series:
       - series: 'ceph_osd_stat_bytes_used'
         values: '21474836480+0x5 26622320218+0x10 27526451350+0x10'
@@ -158,28 +158,28 @@ tests:
         values: '26264513505+0x5 27526451350+0x10 27526451350+0x10'
     alert_rule_test:
       - alertname: CephClusterNearFull
-        eval_time: 4m
+        eval_time: 20s
       - alertname: CephClusterNearFull
-        eval_time: 11m
+        eval_time: 40s
         exp_alerts:
          - exp_labels:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 85%.'
+             description: 'Storage cluster utilization has crossed 75%.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterCriticallyFull
-        eval_time: 21m
+        eval_time: 1m
         exp_alerts:
          - exp_labels:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate expansion'
-             description: 'Storage cluster utilization has crossed 95%.'
+             description: 'Storage cluster utilization has crossed 85%.'
              storage_type: 'ceph'
              severity_level: 'error'
-  - interval: 1m
+  - interval: 5s
     input_series:
       - series: 'ceph_osd_stat_bytes_used'
         values: '27526451000+0x10 26622320218+0x10 21474836480+0x5'
@@ -187,23 +187,23 @@ tests:
         values: '27526451350+0x10 27526451350+0x10 26264513505+0x5'
     alert_rule_test:
       - alertname: CephClusterCriticallyFull
-        eval_time: 6m
+        eval_time: 1m
         exp_alerts:
          - exp_labels:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate expansion'
-             description: 'Storage cluster utilization has crossed 95%.'
+             description: 'Storage cluster utilization has crossed 85%.'
              storage_type: 'ceph'
              severity_level: 'error'
       - alertname: CephClusterNearFull
-        eval_time: 16m
+        eval_time: 1m
         exp_alerts:
          - exp_labels:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 85%.'
+             description: 'Storage cluster utilization has crossed 75%.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterNearFull
