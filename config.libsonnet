@@ -12,7 +12,7 @@
     cephNodeDownAlertTime: '30s',
     clusterStateAlertTime: '10m',
     clusterVersionAlertTime: '10m',
-    clusterUtilizationAlertTime: '5m',
+    clusterUtilizationAlertTime: '30s',
     monQuorumAlertTime: '15m',
     monQuorumLeaderChangesAlertTime: '5m',
     osdDataRebalanceAlertTime: '15s',
