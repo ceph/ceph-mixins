@@ -147,7 +147,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%.'
+             description: 'Storage cluster utilization has crossed 75%. Expansion is required.'
              storage_type: 'ceph'
              severity_level: 'warning'
   - interval: 5s
@@ -166,7 +166,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%.'
+             description: 'Storage cluster utilization has crossed 75%. Expansion is required.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterCriticallyFull
@@ -176,7 +176,7 @@ tests:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate expansion'
-             description: 'Storage cluster utilization has crossed 85%.'
+             description: 'Storage cluster utilization has crossed 85%. Expansion is required immediately.'
              storage_type: 'ceph'
              severity_level: 'error'
   - interval: 5s
@@ -193,7 +193,7 @@ tests:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate expansion'
-             description: 'Storage cluster utilization has crossed 85%.'
+             description: 'Storage cluster utilization has crossed 85%. Expansion is required immediately.'
              storage_type: 'ceph'
              severity_level: 'error'
       - alertname: CephClusterNearFull
@@ -203,7 +203,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%.'
+             description: 'Storage cluster utilization has crossed 75%. Expansion is required.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterNearFull
