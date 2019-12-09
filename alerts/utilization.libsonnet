@@ -15,7 +15,7 @@
             },
             annotations: {
               message: 'Storage cluster is nearing full. Expansion is required.',
-              description: 'Storage cluster utilization has crossed 75%.',
+              description: 'Storage cluster utilization has crossed 75%. Expansion is required.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
@@ -31,7 +31,7 @@
             },
             annotations: {
               message: 'Storage cluster is critically full and needs immediate expansion',
-              description: 'Storage cluster utilization has crossed 85%.',
+              description: 'Storage cluster utilization has crossed 85%. Expansion is required immediately.',
               storage_type: $._config.storageType,
               severity_level: 'error',
             },
