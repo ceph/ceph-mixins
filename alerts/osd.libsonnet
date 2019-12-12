@@ -5,6 +5,38 @@
         name: 'osd-alert.rules',
         rules: [
           {
+            alert: 'CephOSDCriticallyFull',
+            expr: |||
+              (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.85
+            ||| % $._config,
+            'for': $._config.osdUtilizationAlertTime,
+            labels: {
+              severity: 'critical',
+            },
+            annotations: {
+              message: 'Back-end storage device is critically full.',
+              description: 'Utilization of back-end storage device {{ $labels.ceph_daemon }} has crossed 85% on host {{ $labels.hostname }}. Immediately free up some space or expand the storage cluster or contact support.',
+              storage_type: $._config.storageType,
+              severity_level: 'error',
+            },
+          },
+          {
+            alert: 'CephOSDNearFull',
+            expr: |||
+              (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
+            ||| % $._config,
+            'for': $._config.osdUtilizationAlertTime,
+            labels: {
+              severity: 'warning',
+            },
+            annotations: {
+              message: 'Back-end storage device is nearing full.',
+              description: 'Utilization of back-end storage device {{ $labels.ceph_daemon }} has crossed 75% on host {{ $labels.hostname }}. Free up some space or expand the storage cluster or contact support.',
+              storage_type: $._config.storageType,
+              severity_level: 'warning',
+            },
+          },
+          {
             alert: 'CephOSDDiskNotResponding',
             expr: |||
               label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
