@@ -35,7 +35,7 @@ $ cd ceph-mixins
 
 **To generate Prometheus Alert file**
 
-`$ make prometheus_alert_ruless.yaml`
+`$ make prometheus_alert_rules.yaml`
 
 **To generate Prometheus Rule file**
 
