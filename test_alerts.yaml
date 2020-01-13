@@ -40,18 +40,22 @@ tests:
 
   - interval: 1m
     input_series:
-      - series: 'ceph_mon_num_elections{job="rook-ceph-mgr"}'
-        values: '0 1 2 3 4 5 6 7 8 9 10 11 12'
+      - series: 'ceph_mon_metadata{ceph_daemon="mon.0", hostname="host1.lab.comp.com", job="rook-ceph-mgr"}'
+        values: '1+0x12'
+      - series: 'ceph_mon_num_elections{ceph_daemon="mon.0", job="rook-ceph-mgr"}'
+        values: '10+10x12'
     alert_rule_test:
       - alertname: CephMonHighNumberOfLeaderChanges
         eval_time: 11m
         exp_alerts:
          - exp_labels:
              severity: warning
+             ceph_daemon: mon.0
+             hostname: host1.lab.comp.com
              job: rook-ceph-mgr
            exp_annotations:
              message: 'Storage Cluster has seen many leader changes recently.'
-             description: 'Ceph Monitor "rook-ceph-mgr": instance  has seen 1.00 leader changes per minute recently.'
+             description: 'Ceph Monitor mon.0 on host host1.lab.comp.com has seen 10.00 leader changes per minute recently.'
              storage_type: 'ceph'
              severity_level: 'warning'
 
