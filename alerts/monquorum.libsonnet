@@ -23,7 +23,7 @@
           {
             alert: 'CephMonHighNumberOfLeaderChanges',
             expr: |||
-              rate(ceph_mon_num_elections{%(cephExporterSelector)s}[5m]) * 60 > 0.95
+              (ceph_mon_metadata{%(cephExporterSelector)s} * on (ceph_daemon) group_left() (rate(ceph_mon_num_elections{%(cephExporterSelector)s}[5m]) * 60)) > 0.95
             ||| % $._config,
             'for': $._config.monQuorumLeaderChangesAlertTime,
             labels: {
@@ -31,7 +31,7 @@
             },
             annotations: {
               message: 'Storage Cluster has seen many leader changes recently.',
-              description: 'Ceph Monitor "{{ $labels.job }}": instance {{ $labels.instance }} has seen {{ $value | printf "%.2f" }} leader changes per minute recently.',
+              description: 'Ceph Monitor {{ $labels.ceph_daemon }} on host {{ $labels.hostname }} has seen {{ $value | printf "%.2f" }} leader changes per minute recently.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
