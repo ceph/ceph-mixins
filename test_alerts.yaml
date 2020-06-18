@@ -151,7 +151,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Data deletion or cluster expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%. Free up some space or expand the storage cluster.'
+             description: 'Storage cluster utilization has crossed 75% and will become read only at 85%. Free up some space or expand the storage cluster.'
              storage_type: 'ceph'
              severity_level: 'warning'
   - interval: 5s
@@ -170,7 +170,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Data deletion or cluster expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%. Free up some space or expand the storage cluster.'
+             description: 'Storage cluster utilization has crossed 75% and will become read only at 85%. Free up some space or expand the storage cluster.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterCriticallyFull
@@ -180,7 +180,7 @@ tests:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate data deletion or cluster expansion.'
-             description: 'Storage cluster utilization has crossed 85%. Free up some space or expand the storage cluster immediately.'
+             description: 'Storage cluster utilization has crossed 80% and will become readonly at 85%. Free up some space or expand the storage cluster immediately.'
              storage_type: 'ceph'
              severity_level: 'error'
   - interval: 5s
@@ -197,7 +197,7 @@ tests:
              severity: critical
            exp_annotations:
              message: 'Storage cluster is critically full and needs immediate data deletion or cluster expansion.'
-             description: 'Storage cluster utilization has crossed 85%. Free up some space or expand the storage cluster immediately.'
+             description: 'Storage cluster utilization has crossed 80% and will become readonly at 85%. Free up some space or expand the storage cluster immediately.'
              storage_type: 'ceph'
              severity_level: 'error'
       - alertname: CephClusterNearFull
@@ -207,7 +207,7 @@ tests:
              severity: warning
            exp_annotations:
              message: 'Storage cluster is nearing full. Data deletion or cluster expansion is required.'
-             description: 'Storage cluster utilization has crossed 75%. Free up some space or expand the storage cluster.'
+             description: 'Storage cluster utilization has crossed 75% and will become read only at 85%. Free up some space or expand the storage cluster.'
              storage_type: 'ceph'
              severity_level: 'warning'
       - alertname: CephClusterNearFull
