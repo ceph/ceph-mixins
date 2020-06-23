@@ -23,6 +23,7 @@
     osdDownAlertTime: '5m',
     osdUtilizationAlertTime: '40s',
     PGRepairAlertTime: '1h',
+    pvcUtilizationAlertTime: '5s',
     mgrMissingReplicasAlertTime: '5m',
     mgrIsAbsentAlertTime: '5m',
     mdsMissingReplicasAlertTime: '5m',
