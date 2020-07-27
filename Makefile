@@ -12,6 +12,9 @@ fmt:
 prometheus_alert_rules.yaml: mixin.libsonnet lib/alerts.jsonnet alerts/*.libsonnet
 	jsonnet -S lib/alerts.jsonnet > $@
 
+prometheus_alert_rules_external.yaml: mixin-external.libsonnet lib/alerts-external.jsonnet alerts/*.libsonnet
+	jsonnet -S lib/alerts-external.jsonnet > $@
+
 prometheus_rules.yaml: mixin.libsonnet lib/rules.jsonnet rules/*.libsonnet
 	jsonnet -S lib/rules.jsonnet > $@
 
