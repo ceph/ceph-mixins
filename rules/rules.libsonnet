@@ -30,7 +30,7 @@
           {
             record: 'job:kube_pv:count',
             expr: |||
-              count(kube_persistentvolume_info)
+              count(kube_persistentvolume_info * on (storageclass)  group_left(provisioner) kube_storageclass_info {provisioner=~"(.*rbd.csi.ceph.com)|(.*cephfs.csi.ceph.com)"})
             ||| % $._config,
           },
           {
