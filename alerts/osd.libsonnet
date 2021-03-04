@@ -7,7 +7,7 @@
           {
             alert: 'CephOSDCriticallyFull',
             expr: |||
-              (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.85
+              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.80
             ||| % $._config,
             'for': $._config.osdUtilizationAlertTime,
             labels: {
@@ -15,7 +15,7 @@
             },
             annotations: {
               message: 'Back-end storage device is critically full.',
-              description: 'Utilization of back-end storage device {{ $labels.ceph_daemon }} has crossed 85% on host {{ $labels.hostname }}. Immediately free up some space or expand the storage cluster or contact support.',
+              description: 'Utilization of storage device {{ $labels.ceph_daemon }} of device_class type {{$labels.device_class}} has crossed 80% on host {{ $labels.hostname }}. Immediately free up some space or add capacity of type {{$labels.device_class}}.',
               storage_type: $._config.storageType,
               severity_level: 'error',
             },
@@ -23,7 +23,7 @@
           {
             alert: 'CephOSDNearFull',
             expr: |||
-              (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
+              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
             ||| % $._config,
             'for': $._config.osdUtilizationAlertTime,
             labels: {
@@ -31,7 +31,7 @@
             },
             annotations: {
               message: 'Back-end storage device is nearing full.',
-              description: 'Utilization of back-end storage device {{ $labels.ceph_daemon }} has crossed 75% on host {{ $labels.hostname }}. Free up some space or expand the storage cluster or contact support.',
+              description: 'Utilization of storage device {{ $labels.ceph_daemon }} of device_class type {{$labels.device_class}} has crossed 75% on host {{ $labels.hostname }}. Immediately free up some space or add capacity of type {{$labels.device_class}}.',
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
