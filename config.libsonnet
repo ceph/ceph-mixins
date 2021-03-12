@@ -21,6 +21,7 @@
     osdDataRecoveryInProgressAlertTime: '30s',
     osdDiskAlertTime: '1m',
     osdDownAlertTime: '5m',
+    osdFlapAlertTime: '0s',
     osdUtilizationAlertTime: '40s',
     PGRepairAlertTime: '1h',
     pvcUtilizationAlertTime: '5s',

@@ -21,6 +21,22 @@
             },
           },
           {
+            alert: 'CephOSDFlapping',
+            expr: |||
+              changes(ceph_osd_up[5m]) >= 10
+            ||| % $._config,
+            'for': $._config.osdFlapAlertTime,
+            labels: {
+              severity: 'critical',
+            },
+            annotations: {
+              message: 'Ceph storage osd flapping.',
+              description: 'Storage daemon {{ $labels.ceph_daemon }} has restarted 5 times in last 5 minutes. Please check the pod events or ceph status to find out the cause.',
+              storage_type: $._config.storageType,
+              severity_level: 'error',
+            },
+          },
+          {
             alert: 'CephOSDNearFull',
             expr: |||
               (ceph_osd_metadata * on (ceph_daemon) group_right(device_class) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
