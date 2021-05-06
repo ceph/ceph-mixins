@@ -85,6 +85,22 @@
             },
           },
           {
+            alert: 'CephOSDSlowOps',
+            expr: |||
+              ceph_healthcheck_slow_ops > 0
+            ||| % $._config,
+            'for': $._config.osdSlowOpsTime,
+            labels: {
+              severity: 'warning',
+            },
+            annotations: {
+              message: 'OSD requests are taking too long to process.',
+              description: '{{ $value }} Ceph OSD requests are taking too long to process. Please check ceph status to find out the cause.',
+              storage_type: $._config.storageType,
+              severity_level: 'warning',
+            },
+          },
+          {
             alert: 'CephDataRecoveryTakingTooLong',
             expr: |||
               ceph_pg_undersized > 0
