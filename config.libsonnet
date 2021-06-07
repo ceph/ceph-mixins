@@ -14,6 +14,7 @@
     clusterVersionAlertTime: '10m',
     clusterUtilizationAlertTime: '5s',
     clusterReadOnlyAlertTime: '0s',
+    poolQuotaUtilizationAlertTime: '1m',
     monQuorumAlertTime: '15m',
     monQuorumLeaderChangesAlertTime: '5m',
     osdDataRebalanceAlertTime: '15s',
