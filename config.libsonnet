@@ -22,6 +22,7 @@
     osdDiskAlertTime: '1m',
     osdDownAlertTime: '5m',
     osdFlapAlertTime: '0s',
+    osdSlowOpsTime: '30s',
     osdUtilizationAlertTime: '40s',
     PGRepairAlertTime: '1h',
     pvcUtilizationAlertTime: '5s',
