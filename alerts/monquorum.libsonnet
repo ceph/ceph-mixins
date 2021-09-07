@@ -7,8 +7,8 @@
           {
             alert: 'CephMonQuorumAtRisk',
             expr: |||
-              count(ceph_mon_quorum_status{%s} == 1) <= ((count(ceph_mon_metadata{%s}) %s 2) + 1)
-            ||| % [$._config.cephExporterSelector, $._config.cephExporterSelector, '%'],
+              count(ceph_mon_quorum_status{%s} == 1) <= (floor(count(ceph_mon_metadata{%s}) / 2) + 1)
+            ||| % [$._config.cephExporterSelector, $._config.cephExporterSelector],
             'for': $._config.monQuorumAlertTime,
             labels: {
               severity: 'critical',
