@@ -7,7 +7,7 @@
           {
             alert: 'CephOSDCriticallyFull',
             expr: |||
-              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.80
+              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class,hostname) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.80
             ||| % $._config,
             'for': $._config.osdUtilizationAlertTime,
             labels: {
@@ -39,7 +39,7 @@
           {
             alert: 'CephOSDNearFull',
             expr: |||
-              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
+              (ceph_osd_metadata * on (ceph_daemon) group_right(device_class,hostname) (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
             ||| % $._config,
             'for': $._config.osdUtilizationAlertTime,
             labels: {
