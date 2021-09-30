@@ -57,7 +57,7 @@
             expr: |||
               label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
             ||| % $._config,
-            'for': $._config.osdDiskAlertTime,
+            'for': $._config.osdDiskNotRespondingTime,
             labels: {
               severity: 'critical',
             },
@@ -73,7 +73,7 @@
             expr: |||
               label_replace((ceph_osd_in == 0 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
             ||| % $._config,
-            'for': $._config.osdDiskAlertTime,
+            'for': $._config.osdDiskUnavailableTime,
             labels: {
               severity: 'critical',
             },
