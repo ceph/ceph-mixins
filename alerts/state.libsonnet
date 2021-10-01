@@ -55,7 +55,7 @@
           {
             alert: 'CephMonVersionMismatch',
             expr: |||
-              count(count(ceph_mon_metadata{%(cephExporterSelector)s}) by (ceph_version)) > 1
+              count(count(ceph_mon_metadata{%(cephExporterSelector)s, ceph_version != ""}) by (ceph_version)) > 1
             ||| % $._config,
             'for': $._config.clusterVersionAlertTime,
             labels: {
