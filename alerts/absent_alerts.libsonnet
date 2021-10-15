@@ -7,7 +7,7 @@
           {
             alert: 'CephMgrIsAbsent',
             expr: |||
-              up{%(cephExporterSelector)s} == 0
+              label_replace((up{%(cephExporterSelector)s} == 0 or absent(up{%(cephExporterSelector)s})), "namespace", "openshift-storage", "", "")
             ||| % $._config,
             'for': $._config.mgrIsAbsentAlertTime,
             labels: {
@@ -23,7 +23,7 @@
           {
             alert: 'CephMgrIsMissingReplicas',
             expr: |||
-              sum(up{%(cephExporterSelector)s}) by (namespace) < %(cephMgrCount)d
+              sum(kube_deployment_spec_replicas{deployment=~"rook-ceph-mgr-.*"}) by (namespace) < %(cephMgrCount)d
             ||| % $._config,
             'for': $._config.mgrMissingReplicasAlertTime,
             labels: {
