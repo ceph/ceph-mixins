@@ -23,7 +23,7 @@
           {
             alert: 'CephMonQuorumLost',
             expr: |||
-              count(kube_pod_status_phase{pod=~"rook-ceph-mon-.*", phase=~"Running|running"}) by (namespace) < 2
+              count(kube_pod_status_phase{pod=~"rook-ceph-mon-.*", phase=~"Running|running"} == 1) by (namespace) < 2
             |||,
             'for': $._config.monQuorumLostTime,
             labels: {
