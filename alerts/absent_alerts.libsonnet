@@ -23,7 +23,7 @@
           {
             alert: 'CephMgrIsMissingReplicas',
             expr: |||
-              sum(up{%(cephExporterSelector)s}) < %(cephMgrCount)d
+              sum(up{%(cephExporterSelector)s}) by (namespace) < %(cephMgrCount)d
             ||| % $._config,
             'for': $._config.mgrMissingReplicasAlertTime,
             labels: {
@@ -44,7 +44,7 @@
           {
             alert: 'CephMdsMissingReplicas',
             expr: |||
-              sum(ceph_mds_metadata{%(cephExporterSelector)s} == 1) < %(cephMdsCount)d
+              sum(ceph_mds_metadata{%(cephExporterSelector)s} == 1) by (namespace) < %(cephMdsCount)d
             ||| % $._config,
             'for': $._config.mdsMissingReplicasAlertTime,
             labels: {

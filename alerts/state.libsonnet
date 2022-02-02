@@ -39,7 +39,7 @@
           {
             alert: 'CephOSDVersionMismatch',
             expr: |||
-              count(count(ceph_osd_metadata{%(cephExporterSelector)s}) by (ceph_version)) > 1
+              count(count(ceph_osd_metadata{%(cephExporterSelector)s}) by (ceph_version, namespace)) by (ceph_version, namespace) > 1
             ||| % $._config,
             'for': $._config.clusterVersionAlertTime,
             labels: {
