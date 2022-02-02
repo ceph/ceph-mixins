@@ -25,7 +25,7 @@
             expr: |||
               ceph_health_status{%(cephExporterSelector)s} == 1
             ||| % $._config,
-            'for': $._config.clusterStateAlertTime,
+            'for': $._config.clusterWarningStateAlertTime,
             labels: {
               severity: 'warning',
             },

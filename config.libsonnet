@@ -11,6 +11,7 @@
     // Duration to raise various Alerts
     cephNodeDownAlertTime: '30s',
     clusterStateAlertTime: '10m',
+    clusterWarningStateAlertTime: '15m',
     clusterVersionAlertTime: '10m',
     clusterUtilizationAlertTime: '5s',
     clusterReadOnlyAlertTime: '0s',
@@ -20,6 +21,8 @@
     osdDataRebalanceAlertTime: '15s',
     osdDataRecoveryAlertTime: '2h',
     osdDataRecoveryInProgressAlertTime: '30s',
+    osdDiskNotRespondingTime: '15m',
+    osdDiskUnavailableTime: '1m',
     osdDiskAlertTime: '1m',
     osdDownAlertTime: '5m',
     osdFlapAlertTime: '0s',
