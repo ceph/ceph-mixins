@@ -7,7 +7,7 @@
           {
             alert: 'CephMgrIsAbsent',
             expr: |||
-              absent(up{%(cephExporterSelector)s} == 1)
+              up{%(cephExporterSelector)s} == 0
             ||| % $._config,
             'for': $._config.mgrIsAbsentAlertTime,
             labels: {
