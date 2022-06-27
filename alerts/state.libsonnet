@@ -31,7 +31,7 @@
             },
             annotations: {
               message: 'Storage cluster is in degraded state',
-              description: 'Storage cluster is in warning state for more than %s.' % $._config.clusterStateAlertTime,
+              description: 'Storage cluster is in warning state for more than %s.' % $._config.clusterWarningStateAlertTime,
               storage_type: $._config.storageType,
               severity_level: 'warning',
             },
@@ -39,7 +39,7 @@
           {
             alert: 'CephOSDVersionMismatch',
             expr: |||
-              count(count(ceph_osd_metadata{%(cephExporterSelector)s}) by (ceph_version, namespace)) by (ceph_version, namespace) > 1
+              count by (namespace) (count by (ceph_version, namespace) (ceph_osd_metadata{%(cephExporterSelector)s, ceph_version != ""})) > 1
             ||| % $._config,
             'for': $._config.clusterVersionAlertTime,
             labels: {
@@ -55,7 +55,7 @@
           {
             alert: 'CephMonVersionMismatch',
             expr: |||
-              count(count(ceph_mon_metadata{%(cephExporterSelector)s, ceph_version != ""}) by (ceph_version)) > 1
+              count by (namespace) (count by (ceph_version, namespace) (ceph_mon_metadata{%(cephExporterSelector)s, ceph_version != ""})) > 1
             ||| % $._config,
             'for': $._config.clusterVersionAlertTime,
             labels: {
